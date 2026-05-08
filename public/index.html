@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BIM-GIS Standards Landscape</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Hero ──────────────────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-dots"></div>
+    <div class="container hero-body">
+      <p class="hero-label">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+        GIS Standards Landscape
+      </p>
+      <h1 class="hero-title">Explore the European and global ecosystem of geographic information standards</h1>
+      <p class="hero-desc">
+        A curated map of EN, ISO and CEN standards in geographic information —
+        their scope, relationships, and how they connect to BIM and beyond.
+      </p>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <p class="stat-label">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Standards
+          </p>
+          <span class="stat-value" id="hero-std-count">—</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main ──────────────────────────────────────────────────────────────── -->
+  <main class="container main-section">
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-view="catalog"  role="tab" aria-selected="true">Catalogue</button>
+        <button class="tab-btn"        data-view="graph"    role="tab" aria-selected="false">Network graph</button>
+        <button class="tab-btn"        data-view="timeline" role="tab" aria-selected="false">Timeline</button>
+      </div>
+      <div class="filters">
+        <div class="search-wrap">
+          <svg class="search-icon icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input id="search-input" type="search" placeholder="Search standards…" class="input search-input" />
+        </div>
+        <select id="body-filter" class="select">
+          <option value="all">All bodies</option>
+          <option value="cen">CEN</option>
+          <option value="iso">ISO</option>
+        </select>
+        <select id="committee-filter" class="select committee-select">
+          <option value="all">All committees</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Catalog panel -->
+    <div id="panel-catalog" role="tabpanel">
+      <p id="result-count" class="result-count">Loading…</p>
+      <div id="catalog-grid" class="catalog-grid"></div>
+    </div>
+
+    <!-- Timeline panel -->
+    <div id="panel-timeline" role="tabpanel" hidden>
+      <div id="timeline-chart" class="timeline-chart-wrap"></div>
+      <div id="timeline-container" class="timeline"></div>
+    </div>
+
+    <!-- Graph panel -->
+    <div id="panel-graph" role="tabpanel" hidden>
+      <div id="graph-wrap" class="graph-wrap">
+        <div id="graph-loading" class="graph-loading">Building network graph…</div>
+        <div id="graph-container" class="graph-container"></div>
+
+        <!-- Zoom / layout controls -->
+        <div class="graph-controls">
+          <button class="graph-ctrl-btn" id="graph-zoom-in" title="Zoom in">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="6.5" cy="6.5" r="4.5"/>
+              <line x1="6.5" y1="4.5" x2="6.5" y2="8.5"/>
+              <line x1="4.5" y1="6.5" x2="8.5" y2="6.5"/>
+              <line x1="10" y1="10" x2="14" y2="14"/>
+            </svg>
+          </button>
+          <button class="graph-ctrl-btn" id="graph-zoom-out" title="Zoom out">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="6.5" cy="6.5" r="4.5"/>
+              <line x1="4.5" y1="6.5" x2="8.5" y2="6.5"/>
+              <line x1="10" y1="10" x2="14" y2="14"/>
+            </svg>
+          </button>
+          <button class="graph-ctrl-btn" id="graph-fit" title="Fit all nodes in view">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="M5 2H2.5a.5.5 0 0 0-.5.5V5"/>
+              <path d="M11 2h2.5a.5.5 0 0 1 .5.5V5"/>
+              <path d="M2 11v2.5a.5.5 0 0 0 .5.5H5"/>
+              <path d="M14 11v2.5a.5.5 0 0 1-.5.5H11"/>
+            </svg>
+          </button>
+          <div class="graph-ctrl-sep"></div>
+          <button class="graph-ctrl-btn" id="graph-physics-toggle" title="Rearrange layout" disabled>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path d="M2 8a6 6 0 0 1 10-4.5L14 6"/>
+              <path d="M14 1v5h-5"/>
+              <path d="M14 8a6 6 0 0 1-10 4.5L2 10"/>
+              <path d="M2 15v-5h5"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Legend -->
+        <div class="graph-legend">
+          <span class="legend-item"><span class="legend-dot legend-dot-primary"></span>Catalogued standard</span>
+          <span class="legend-item"><span class="legend-dot legend-dot-accent"></span>External reference</span>
+          <span class="legend-sep"></span>
+          <span class="legend-hint">Scroll to zoom · Drag to pan · Click a node for details</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    BIM-GIS Standards Landscape · by Modelling and Standards Committee (M&S) of the European Council on Computing in Construction (EC³) @ 2026·
+    </footer>
+
+
+  <!-- ── Detail Dialog ─────────────────────────────────────────────────────── -->
+  <div id="dialog-overlay" class="dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden>
+    <div class="dialog">
+      <button id="dialog-close" class="dialog-close" aria-label="Close dialog">✕</button>
+
+      <div class="dialog-header">
+        <div class="dialog-meta">
+          <code id="dialog-num" class="dialog-num"></code>
+          <span id="dialog-badges"></span>
+        </div>
+        <h2 id="dialog-title" class="dialog-title"></h2>
+      </div>
+
+      <div class="dialog-body">
+        <div class="field">
+          <p class="field-label">Scope / Abstract</p>
+          <p id="dialog-scope" class="field-value"></p>
+        </div>
+
+        <div class="dialog-grid">
+          <div class="field">
+            <p class="field-label">First Year</p>
+            <p id="dialog-first-year" class="field-value"></p>
+          </div>
+          <div class="field">
+            <p class="field-label">Current Year</p>
+            <p id="dialog-current-year" class="field-value"></p>
+          </div>
+          <div class="field">
+            <p class="field-label">ICS</p>
+            <p id="dialog-ics" class="field-value"></p>
+          </div>
+          <div class="field">
+            <p class="field-label">Type</p>
+            <p id="dialog-type" class="field-value"></p>
+          </div>
+        </div>
+
+        <div id="dialog-link-wrap" class="field" hidden>
+          <a id="dialog-link" href="#" target="_blank" rel="noreferrer" class="ext-link">
+            ↗ Open source
+          </a>
+        </div>
+
+        <div class="field">
+          <p class="field-label" id="label-outgoing">References (0)</p>
+          <div id="dialog-outgoing" class="rel-list"></div>
+        </div>
+
+        <div class="field">
+          <p class="field-label" id="label-incoming">Referenced by (0)</p>
+          <div id="dialog-incoming" class="rel-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- vis-network from CDN -->
+  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

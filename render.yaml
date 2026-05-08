@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: bim-gis-standards
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: ADMIN_PASSWORD
+        generateValue: true
