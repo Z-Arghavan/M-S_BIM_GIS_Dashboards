@@ -56,7 +56,6 @@ let timelineSortedYears = [];
 /* ── Hero ────────────────────────────────────────────────────────────────── */
 function updateHero() {
   document.getElementById('hero-std-count').textContent = state.standards.length;
-  document.getElementById('hero-rel-count').textContent = state.relationships.length;
 }
 
 /* ── Committee dropdown ──────────────────────────────────────────────────── */
