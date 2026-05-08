@@ -40,7 +40,7 @@ function parseWorkbook(wb) {
 
 // ── Initial load ──────────────────────────────────────────────────────────────
 
-const EXCEL_PATH = path.join(__dirname, 'GIS-standards-landscape.xlsx');
+const EXCEL_PATH = path.join(__dirname, 'data', 'GIS-standards-landscape.xlsx');
 
 let data = { standards: [], relationships: [], lastUpdated: null };
 

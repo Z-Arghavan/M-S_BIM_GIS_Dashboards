@@ -24,7 +24,7 @@ function parseSheet(wb, sheetName, cols) {
   });
 }
 
-const excelPath = path.join(__dirname, '..', 'GIS-standards-landscape.xlsx');
+const excelPath = path.join(__dirname, '..', 'data', 'GIS-standards-landscape.xlsx');
 const wb = XLSX.readFile(excelPath, { cellFormula: false, cellStyles: false });
 
 const standards     = parseSheet(wb, 'GIS-Standards',     STD_COLS);
