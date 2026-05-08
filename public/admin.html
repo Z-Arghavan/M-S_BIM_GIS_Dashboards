@@ -27,18 +27,15 @@
       background: var(--card); border: 1px solid var(--border);
       border-radius: calc(var(--radius) * 2);
       box-shadow: 0 4px 24px -4px hsl(215 30% 12% / 0.10);
-      padding: 2rem; width: 100%; max-width: 480px;
+      padding: 2rem; width: 100%; max-width: 500px;
     }
     h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .subtitle { font-size: 0.875rem; color: var(--muted-fg); margin-bottom: 1.75rem; line-height: 1.5; }
-
-    .stats { display: flex; gap: 1rem; margin-bottom: 1.75rem; }
-    .stat { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.625rem 0.875rem; text-align: center; }
-    .stat-val { font-size: 1.375rem; font-weight: 700; color: var(--primary); }
-    .stat-lbl { font-size: 0.6875rem; color: var(--muted-fg); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.125rem; }
+    .subtitle { font-size: 0.875rem; color: var(--muted-fg); margin-bottom: 1.75rem; line-height: 1.55; }
 
     .field { margin-bottom: 1.25rem; }
     label { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.375rem; }
+    .hint { font-size: 0.75rem; color: var(--muted-fg); margin-top: 0.3rem; line-height: 1.5; }
+    .hint a { color: var(--primary); }
 
     input[type="password"] {
       width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border);
@@ -62,19 +59,25 @@
     .btn {
       width: 100%; padding: 0.65rem; background: var(--primary); color: white;
       border: none; border-radius: var(--radius); font-size: 0.9375rem;
-      font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+      font-weight: 600; cursor: pointer; transition: opacity 0.15s; margin-top: 0.25rem;
     }
     .btn:hover { opacity: 0.88; }
     .btn:disabled { opacity: 0.45; cursor: default; }
 
-    .toast {
-      margin-top: 1rem; padding: 0.75rem 1rem; border-radius: var(--radius);
-      font-size: 0.875rem; font-weight: 500; display: none;
-    }
-    .toast.success { background: hsl(158 64% 38% / 0.12); color: var(--success); border: 1px solid hsl(158 64% 38% / 0.25); }
-    .toast.error   { background: hsl(0 72% 51% / 0.10);   color: var(--danger);  border: 1px solid hsl(0 72% 51% / 0.25); }
+    .progress { margin-top: 1.25rem; display: none; }
+    .step { font-size: 0.8125rem; padding: 0.3rem 0; display: flex; gap: 0.5rem; align-items: center; color: var(--muted-fg); }
+    .step.active { color: var(--fg); font-weight: 600; }
+    .step.done   { color: var(--success); }
+    .step.error  { color: var(--danger); }
 
-    .last-updated { font-size: 0.75rem; color: var(--muted-fg); margin-top: 1rem; text-align: center; }
+    .toast {
+      margin-top: 1rem; padding: 0.875rem 1rem; border-radius: var(--radius);
+      font-size: 0.875rem; display: none; line-height: 1.55;
+    }
+    .toast.success { background: hsl(158 64% 38% / 0.10); color: var(--success); border: 1px solid hsl(158 64% 38% / 0.25); }
+    .toast.error   { background: hsl(0 72% 51% / 0.10);   color: var(--danger);  border: 1px solid hsl(0 72% 51% / 0.25); }
+    .toast a { color: inherit; font-weight: 700; }
+
     a.back { display: inline-block; margin-bottom: 1.25rem; font-size: 0.8125rem; color: var(--primary); text-decoration: none; }
     a.back:hover { text-decoration: underline; }
   </style>
@@ -82,22 +85,25 @@
 <body>
   <div class="card">
     <a class="back" href="./">← Back to dashboard</a>
-    <h1>Data Admin</h1>
-    <p class="subtitle">Upload a new Excel file to refresh all standards and relationships instantly — no restart needed.</p>
-
-    <div class="stats">
-      <div class="stat"><div class="stat-val" id="stat-std">—</div><div class="stat-lbl">Standards</div></div>
-      <div class="stat"><div class="stat-val" id="stat-rel">—</div><div class="stat-lbl">Relationships</div></div>
-    </div>
+    <h1>Update Standards Data</h1>
+    <p class="subtitle">
+      Upload a new Excel file. It will be pushed to GitHub and the site will
+      automatically rebuild — usually ready within 2 minutes.
+    </p>
 
     <form id="upload-form">
       <div class="field">
-        <label for="pwd">Admin password</label>
-        <input type="password" id="pwd" placeholder="Enter password" required />
+        <label for="token">GitHub personal access token</label>
+        <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxx" required />
+        <p class="hint">
+          Needs <strong>repo</strong> (write) scope.
+          <a href="https://github.com/settings/tokens/new?scopes=repo&description=GIS+Admin" target="_blank" rel="noreferrer">Generate one here ↗</a><br>
+          Your token is sent only to the GitHub API — never stored anywhere.
+        </p>
       </div>
 
       <div class="field">
-        <label>Excel file (.xlsx)</label>
+        <label>New Excel file (.xlsx)</label>
         <div class="drop-zone" id="drop-zone">
           <input type="file" id="file-input" accept=".xlsx" required />
           <div class="drop-icon">📂</div>
@@ -106,28 +112,33 @@
         </div>
       </div>
 
-      <button class="btn" type="submit" id="submit-btn">Upload &amp; refresh data</button>
+      <button class="btn" type="submit" id="submit-btn">Upload &amp; redeploy site</button>
     </form>
 
+    <div class="progress" id="progress">
+      <div class="step" id="s-read">⏳ Reading file…</div>
+      <div class="step" id="s-commit">⏳ Committing to GitHub…</div>
+      <div class="step" id="s-done">⏳ Triggering auto-deploy…</div>
+    </div>
+
     <div class="toast" id="toast"></div>
-    <p class="last-updated" id="last-updated"></p>
   </div>
 
   <script>
+    const OWNER     = 'Z-Arghavan';
+    const REPO      = 'M-S_BIM_GIS_Dashboards';
+    const FILE_PATH = 'GIS-standards-landscape.xlsx';
+    const API_BASE  = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+
     const dropZone  = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const fileName  = document.getElementById('file-name');
     const form      = document.getElementById('upload-form');
     const submitBtn = document.getElementById('submit-btn');
+    const progress  = document.getElementById('progress');
     const toast     = document.getElementById('toast');
 
-    fetch('/api/status').then(r => r.json()).then(s => {
-      document.getElementById('stat-std').textContent = s.standards     ?? '—';
-      document.getElementById('stat-rel').textContent = s.relationships ?? '—';
-      if (s.lastUpdated)
-        document.getElementById('last-updated').textContent = 'Last updated: ' + new Date(s.lastUpdated).toLocaleString();
-    }).catch(() => {});
-
+    // Drag & drop
     dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('dragover'); });
     dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('dragover'));
     dropZone.addEventListener('drop', e => {
@@ -136,36 +147,82 @@
     });
     fileInput.addEventListener('change', () => { fileName.textContent = fileInput.files[0]?.name ?? ''; });
 
+    // Safe base64 for large files
+    function toBase64(buffer) {
+      const bytes = new Uint8Array(buffer);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i += 8192)
+        binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+      return btoa(binary);
+    }
+
+    function setStep(id, state, text) {
+      const el = document.getElementById(id);
+      el.className = 'step ' + state;
+      const icon = { active: '🔄', done: '✅', error: '❌' }[state] ?? '⏳';
+      el.textContent = icon + ' ' + text;
+    }
+
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      const pwd  = document.getElementById('pwd').value;
-      const file = fileInput.files[0];
-      if (!file) return showToast('Please select an .xlsx file.', 'error');
+      const token = document.getElementById('token').value.trim();
+      const file  = fileInput.files[0];
+      if (!file)  return showToast('Please select an .xlsx file.', 'error');
+      if (!token) return showToast('Please enter your GitHub token.', 'error');
 
-      const fd = new FormData();
-      fd.append('excel', file);
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Uploading…';
+      toast.style.display = 'none';
+      progress.style.display = 'block';
+
+      const headers = { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' };
 
       try {
-        const res  = await fetch('/admin/upload', { method: 'POST', headers: { 'x-admin-password': pwd }, body: fd });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || 'Upload failed');
-        document.getElementById('stat-std').textContent = json.standards;
-        document.getElementById('stat-rel').textContent = json.relationships;
-        document.getElementById('last-updated').textContent = 'Last updated: ' + new Date(json.lastUpdated).toLocaleString();
-        showToast(`Done! ${json.standards} standards and ${json.relationships} relationships loaded.`, 'success');
+        // 1. Read file
+        setStep('s-read', 'active', 'Reading file…');
+        const content = toBase64(await file.arrayBuffer());
+        setStep('s-read', 'done', 'File read');
+
+        // 2. Get current SHA (needed to overwrite)
+        setStep('s-commit', 'active', 'Committing to GitHub…');
+        const getRes = await fetch(API_BASE, { headers });
+        const current = getRes.ok ? await getRes.json() : {};
+
+        // 3. Commit
+        const putRes = await fetch(API_BASE, {
+          method: 'PUT', headers,
+          body: JSON.stringify({
+            message: `Update GIS standards data (${new Date().toLocaleDateString()})`,
+            content,
+            ...(current.sha ? { sha: current.sha } : {}),
+          }),
+        });
+        if (!putRes.ok) {
+          const err = await putRes.json();
+          throw new Error(err.message || 'GitHub API error — check your token permissions');
+        }
+        setStep('s-commit', 'done', 'Committed to GitHub');
+
+        // 4. Done
+        setStep('s-done', 'done', 'Auto-deploy triggered');
+        const actionsUrl = `https://github.com/${OWNER}/${REPO}/actions`;
+        showToast(
+          `Done! GitHub is rebuilding the site — usually takes 1–2 minutes.<br>` +
+          `<a href="${actionsUrl}" target="_blank" rel="noreferrer">Watch the deployment ↗</a>`,
+          'success'
+        );
         form.reset(); fileName.textContent = '';
       } catch (err) {
+        ['s-read','s-commit','s-done'].forEach(id => {
+          if (document.getElementById(id).classList.contains('active')) setStep(id, 'error', document.getElementById(id).textContent.slice(3));
+        });
         showToast(err.message, 'error');
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Upload & refresh data';
       }
     });
 
     function showToast(msg, type) {
-      toast.textContent = msg; toast.className = `toast ${type}`; toast.style.display = 'block';
+      toast.innerHTML = msg; toast.className = `toast ${type}`; toast.style.display = 'block';
     }
   </script>
 </body>
