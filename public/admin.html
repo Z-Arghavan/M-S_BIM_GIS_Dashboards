@@ -19,164 +19,91 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--fg);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1rem;
+      background: var(--bg); color: var(--fg);
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; padding: 2rem 1rem;
     }
-
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: var(--card); border: 1px solid var(--border);
       border-radius: calc(var(--radius) * 2);
       box-shadow: 0 4px 24px -4px hsl(215 30% 12% / 0.10);
-      padding: 2rem;
-      width: 100%;
-      max-width: 480px;
+      padding: 2rem; width: 100%; max-width: 480px;
     }
+    h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .subtitle { font-size: 0.875rem; color: var(--muted-fg); margin-bottom: 1.75rem; line-height: 1.5; }
 
-    h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-    .subtitle {
-      font-size: 0.875rem;
-      color: var(--muted-fg);
-      margin-bottom: 1.75rem;
-    }
-
-    /* Stats bar */
-    .stats {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.75rem;
-    }
-    .stat {
-      flex: 1;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.625rem 0.875rem;
-      text-align: center;
-    }
+    .stats { display: flex; gap: 1rem; margin-bottom: 1.75rem; }
+    .stat { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.625rem 0.875rem; text-align: center; }
     .stat-val { font-size: 1.375rem; font-weight: 700; color: var(--primary); }
     .stat-lbl { font-size: 0.6875rem; color: var(--muted-fg); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 0.125rem; }
 
-    /* Form */
+    .field { margin-bottom: 1.25rem; }
     label { display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.375rem; }
 
     input[type="password"] {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.875rem;
-      margin-bottom: 1rem;
-      outline: none;
+      width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 0.875rem; outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
-    input[type="password"]:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px hsl(198 90% 32% / 0.15);
-    }
+    input[type="password"]:focus { border-color: var(--primary); box-shadow: 0 0 0 2px hsl(198 90% 32% / 0.15); }
 
-    /* Drop zone */
     .drop-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 2rem 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      margin-bottom: 1.25rem;
-      position: relative;
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 2rem 1rem; text-align: center; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s; position: relative;
     }
-    .drop-zone.dragover {
-      border-color: var(--primary);
-      background: hsl(198 90% 32% / 0.04);
-    }
-    .drop-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
+    .drop-zone.dragover { border-color: var(--primary); background: hsl(198 90% 32% / 0.04); }
+    .drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .drop-icon { font-size: 2rem; margin-bottom: 0.5rem; }
     .drop-text { font-size: 0.875rem; color: var(--muted-fg); }
     .drop-text strong { color: var(--primary); }
     .file-chosen { font-size: 0.8125rem; color: var(--success); font-weight: 600; margin-top: 0.5rem; }
 
-    /* Submit */
     .btn {
-      width: 100%;
-      padding: 0.65rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 0.9375rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s;
+      width: 100%; padding: 0.65rem; background: var(--primary); color: white;
+      border: none; border-radius: var(--radius); font-size: 0.9375rem;
+      font-weight: 600; cursor: pointer; transition: opacity 0.15s;
     }
     .btn:hover { opacity: 0.88; }
     .btn:disabled { opacity: 0.45; cursor: default; }
 
-    /* Toast */
     .toast {
-      margin-top: 1rem;
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius);
-      font-size: 0.875rem;
-      font-weight: 500;
-      display: none;
+      margin-top: 1rem; padding: 0.75rem 1rem; border-radius: var(--radius);
+      font-size: 0.875rem; font-weight: 500; display: none;
     }
     .toast.success { background: hsl(158 64% 38% / 0.12); color: var(--success); border: 1px solid hsl(158 64% 38% / 0.25); }
     .toast.error   { background: hsl(0 72% 51% / 0.10);   color: var(--danger);  border: 1px solid hsl(0 72% 51% / 0.25); }
 
     .last-updated { font-size: 0.75rem; color: var(--muted-fg); margin-top: 1rem; text-align: center; }
-
     a.back { display: inline-block; margin-bottom: 1.25rem; font-size: 0.8125rem; color: var(--primary); text-decoration: none; }
     a.back:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-
   <div class="card">
-    <a class="back" href="/">← Back to dashboard</a>
-
+    <a class="back" href="./">← Back to dashboard</a>
     <h1>Data Admin</h1>
     <p class="subtitle">Upload a new Excel file to refresh all standards and relationships instantly — no restart needed.</p>
 
-    <!-- Live stats -->
     <div class="stats">
-      <div class="stat">
-        <div class="stat-val" id="stat-std">—</div>
-        <div class="stat-lbl">Standards</div>
-      </div>
-      <div class="stat">
-        <div class="stat-val" id="stat-rel">—</div>
-        <div class="stat-lbl">Relationships</div>
-      </div>
+      <div class="stat"><div class="stat-val" id="stat-std">—</div><div class="stat-lbl">Standards</div></div>
+      <div class="stat"><div class="stat-val" id="stat-rel">—</div><div class="stat-lbl">Relationships</div></div>
     </div>
 
-    <!-- Upload form -->
     <form id="upload-form">
-      <label for="pwd">Admin password</label>
-      <input type="password" id="pwd" placeholder="Enter password" required />
+      <div class="field">
+        <label for="pwd">Admin password</label>
+        <input type="password" id="pwd" placeholder="Enter password" required />
+      </div>
 
-      <label>Excel file (.xlsx)</label>
-      <div class="drop-zone" id="drop-zone">
-        <input type="file" id="file-input" accept=".xlsx" required />
-        <div class="drop-icon">📂</div>
-        <p class="drop-text">Drag &amp; drop your file here, or <strong>click to browse</strong></p>
-        <p class="file-chosen" id="file-name"></p>
+      <div class="field">
+        <label>Excel file (.xlsx)</label>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="file-input" accept=".xlsx" required />
+          <div class="drop-icon">📂</div>
+          <p class="drop-text">Drag &amp; drop your file here, or <strong>click to browse</strong></p>
+          <p class="file-chosen" id="file-name"></p>
+        </div>
       </div>
 
       <button class="btn" type="submit" id="submit-btn">Upload &amp; refresh data</button>
@@ -194,33 +121,21 @@
     const submitBtn = document.getElementById('submit-btn');
     const toast     = document.getElementById('toast');
 
-    // ── Load current stats ────────────────────────────────────────────────────
     fetch('/api/status').then(r => r.json()).then(s => {
       document.getElementById('stat-std').textContent = s.standards     ?? '—';
       document.getElementById('stat-rel').textContent = s.relationships ?? '—';
-      if (s.lastUpdated) {
-        document.getElementById('last-updated').textContent =
-          'Last updated: ' + new Date(s.lastUpdated).toLocaleString();
-      }
-    });
+      if (s.lastUpdated)
+        document.getElementById('last-updated').textContent = 'Last updated: ' + new Date(s.lastUpdated).toLocaleString();
+    }).catch(() => {});
 
-    // ── Drag & drop visual feedback ───────────────────────────────────────────
     dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('dragover'); });
     dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop',      e  => {
-      e.preventDefault();
-      dropZone.classList.remove('dragover');
-      if (e.dataTransfer.files[0]) {
-        fileInput.files = e.dataTransfer.files;
-        fileName.textContent = e.dataTransfer.files[0].name;
-      }
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault(); dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; fileName.textContent = e.dataTransfer.files[0].name; }
     });
+    fileInput.addEventListener('change', () => { fileName.textContent = fileInput.files[0]?.name ?? ''; });
 
-    fileInput.addEventListener('change', () => {
-      fileName.textContent = fileInput.files[0]?.name ?? '';
-    });
-
-    // ── Submit ────────────────────────────────────────────────────────────────
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const pwd  = document.getElementById('pwd').value;
@@ -229,40 +144,28 @@
 
       const fd = new FormData();
       fd.append('excel', file);
-
-      submitBtn.disabled    = true;
+      submitBtn.disabled = true;
       submitBtn.textContent = 'Uploading…';
 
       try {
-        const res  = await fetch('/admin/upload', {
-          method:  'POST',
-          headers: { 'x-admin-password': pwd },
-          body:    fd,
-        });
+        const res  = await fetch('/admin/upload', { method: 'POST', headers: { 'x-admin-password': pwd }, body: fd });
         const json = await res.json();
-
         if (!res.ok) throw new Error(json.error || 'Upload failed');
-
         document.getElementById('stat-std').textContent = json.standards;
         document.getElementById('stat-rel').textContent = json.relationships;
-        document.getElementById('last-updated').textContent =
-          'Last updated: ' + new Date(json.lastUpdated).toLocaleString();
-
+        document.getElementById('last-updated').textContent = 'Last updated: ' + new Date(json.lastUpdated).toLocaleString();
         showToast(`Done! ${json.standards} standards and ${json.relationships} relationships loaded.`, 'success');
-        form.reset();
-        fileName.textContent = '';
+        form.reset(); fileName.textContent = '';
       } catch (err) {
         showToast(err.message, 'error');
       } finally {
-        submitBtn.disabled    = false;
+        submitBtn.disabled = false;
         submitBtn.textContent = 'Upload & refresh data';
       }
     });
 
     function showToast(msg, type) {
-      toast.textContent  = msg;
-      toast.className    = `toast ${type}`;
-      toast.style.display = 'block';
+      toast.textContent = msg; toast.className = `toast ${type}`; toast.style.display = 'block';
     }
   </script>
 </body>
