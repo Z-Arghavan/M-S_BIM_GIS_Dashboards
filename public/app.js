@@ -25,8 +25,8 @@ let timelineSortedYears = [];
 (async function init() {
   try {
     const [stds, rels] = await Promise.all([
-      fetch('/api/standards').then(r => r.json()),
-      fetch('/api/relationships').then(r => r.json()),
+      fetch('data/standards.json').then(r => r.json()),
+      fetch('data/relationships.json').then(r => r.json()),
     ]);
 
     state.standards     = stds;
